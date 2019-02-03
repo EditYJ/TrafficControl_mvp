@@ -1,5 +1,9 @@
 package com.edityj.trafficcontrol_mvp.presenter;
 
+import android.support.v7.widget.RecyclerView;
+
+import com.edityj.trafficcontrol_mvp.application.AppInfo;
+import com.edityj.trafficcontrol_mvp.config.ConfigOfApp;
 import com.edityj.trafficcontrol_mvp.model.InitItemData;
 import com.edityj.trafficcontrol_mvp.model.bean.ITEMDATA;
 import com.edityj.trafficcontrol_mvp.presenter.base.BasePresenter;
@@ -25,5 +29,8 @@ public class ListPresenter extends BasePresenter<MainView> {
         return InitItemData.getInstance().getInitItemDatas();
     }
 
-
+    public void delSessionData(List<ITEMDATA> list){
+//        getChangeData().remove(pos);
+            AppInfo.Sp.setListToJosn(ConfigOfApp.APP_LIST_DATA, list);
+    }
 }

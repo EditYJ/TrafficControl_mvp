@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class AppInfo {
 
-    private static SharePrefsHelper Sp = null;
+    public static SharePrefsHelper Sp = null;
     private static MainApplication mainApplication;
 
     private static TypedArray icon;
