@@ -1,11 +1,19 @@
 package com.edityj.trafficcontrol_mvp.view;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -13,6 +21,7 @@ import com.edityj.trafficcontrol_mvp.R;
 import com.edityj.trafficcontrol_mvp.adapter.MyListAdapter;
 import com.edityj.trafficcontrol_mvp.presenter.ListPresenter;
 import com.edityj.trafficcontrol_mvp.presenter.base.BasePresenter;
+import com.edityj.trafficcontrol_mvp.utils.DpOrPxUtils;
 import com.edityj.trafficcontrol_mvp.utils.ToastUtil;
 import com.edityj.trafficcontrol_mvp.view.base.BaseView;
 import com.hjq.bar.OnTitleBarListener;
@@ -33,10 +42,37 @@ public class MainView extends BaseView implements IMainView{
     private MyListAdapter myListAdapter;
     private RecyclerView recyclerView;
 
+    private LinearLayout leftScreen;
+    private LinearLayout rightScreen;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+        leftScreen = findViewById(R.id.left_screen);
+        rightScreen = findViewById(R.id.right_screen);
+//=======================================临时测试代码============================================//
+        ImageView imageView = new ImageView(this);
+        imageView.setImageResource(R.drawable.go_left);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(DpOrPxUtils.dip2px(this,50),DpOrPxUtils.dip2px(this,50));
+        imageView.setLayoutParams(layoutParams);
+        leftScreen.addView(imageView);
+
+        TextView textView = new TextView(this);
+        textView.setText("禁止通行");
+        textView.setTextColor(Color.RED);
+//        setTextSize(TypedValue.COMPLEX_UNIT_PX,22); //22像素
+//        setTextSize(TypedValue.COMPLEX_UNIT_SP,22); //22SP
+//        setTextSize(TypedValue.COMPLEX_UNIT_DIP,22);//22DIP
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,28);
+        textView.setGravity(Gravity.CENTER);
+        //设置为加粗
+        textView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        //设置不为加粗
+//        textView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+
+        rightScreen.addView(textView);
+//=============================================================================================//
         initTitleBar();
         initBaseListConfig();
         addListClickListener();

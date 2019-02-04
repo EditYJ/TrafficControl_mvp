@@ -36,20 +36,26 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_below="@+id/topbar"
-
+        android:orientation="horizontal"
         >
         <LinearLayout
+            android:id="@+id/left_screen"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/select">
+            android:background="@drawable/select"
+            android:orientation="vertical"
+            android:gravity="center">
 
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/right_screen"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/select">
+            android:background="@drawable/select"
+            android:orientation="vertical"
+            android:gravity="center">
 
         </LinearLayout>
     </LinearLayout>
