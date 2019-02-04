@@ -4,12 +4,39 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <!--<com.edityj.trafficcontrol_mvp.widget.menu.TopBar-->
+        <!--android:id="@+id/topbar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:background="@color/colorPrimary"-->
+        <!--app:leftBackground="@drawable/list_select"-->
+        <!--app:rightBackground="@drawable/list_select"-->
+        <!--app:titleText="我的首页"-->
+        <!--app:titleTextColor="#FFF"-->
+        <!--app:titleTextSize="6sp" />-->
+    <com.hjq.bar.TitleBar
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:backButton="false"
+        app:leftColor="@color/white_color"
+        app:leftSize="18sp"
+        app:leftTitle="获取电量"
+        app:rightColor="@color/white_color"
+        app:rightSize="18sp"
+        app:rightTitle="发送"
+        app:titleColor="@color/white_color"
+        app:title="TrafficControl"
+        app:titleSize="20sp" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white_color">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_below="@+id/topbar"
+        android:background="@color/white_color" />
 
     <com.edityj.trafficcontrol_mvp.widget.menu.HorizontalExpandMenu
         android:id="@+id/expandMenu1"
@@ -29,6 +56,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:background="@drawable/down_menu_select"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:onClick="reset"
@@ -36,6 +64,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:background="@drawable/down_menu_select"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:onClick="editer"
@@ -43,6 +72,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:background="@drawable/down_menu_select"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:onClick="add"
@@ -50,6 +80,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:background="@drawable/down_menu_select"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:onClick="clear"
@@ -57,10 +88,11 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:background="@drawable/down_menu_select"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:onClick="send"
-                android:text="发送"/>
+                android:onClick="changeLight"
+                android:text="调亮度"/>
         </LinearLayout>
     </com.edityj.trafficcontrol_mvp.widget.menu.HorizontalExpandMenu>
 </RelativeLayout>

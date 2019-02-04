@@ -31,6 +31,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:28.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
@@ -42,4 +43,12 @@ dependencies {
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
     //fastjson
     implementation 'com.alibaba:fastjson:1.1.70.android'
+
+    //A simple generic title bar
+    //github:https://github.com/getActivity/TitleBar
+    implementation 'com.hjq:titlebar:5.0'
+
+    //StatusBarUtil 状态栏工具类
+    //github:https://github.com/laobie/StatusBarUtil
+    implementation 'com.jaeger.statusbarutil:library:1.5.1'
 }

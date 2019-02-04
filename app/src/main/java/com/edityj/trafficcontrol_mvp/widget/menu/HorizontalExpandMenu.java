@@ -25,6 +25,7 @@ import static com.edityj.trafficcontrol_mvp.widget.menu.HorizontalExpandMenu.But
  * @Email 158392613@qq.com
  * Create at 2019/2/3
  * description: 为菜单栏设置背景,悬浮菜单
+ * 参考资料：https://www.jianshu.com/p/045da19ca6ea
  */
 public class HorizontalExpandMenu extends RelativeLayout {
     private Context mContext;
