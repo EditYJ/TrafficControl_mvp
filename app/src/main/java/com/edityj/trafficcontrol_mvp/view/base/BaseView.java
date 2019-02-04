@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.edityj.trafficcontrol_mvp.presenter.base.BasePresenter;
+import com.edityj.trafficcontrol_mvp.utils.ToastUtil;
 
 /**
  * @author EditYJ
@@ -48,7 +49,7 @@ public abstract class BaseView extends Activity implements IBaseView{
 
     @Override
     public void showToast(String msg) {
-
+        ToastUtil.showToast(msg);
     }
 
     @Override
