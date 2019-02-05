@@ -9,12 +9,10 @@ import java.util.List;
  * @author EditYJ
  * @Email 158392613@qq.com
  * Create at 2019/1/20
- * description: 双实例模式，用于加载原始数据，和修改后的数据。
+ * description: 巧妙的单实例模式，用于加载原始数据，和修改后的数据。
+ *              参考资料：https://www.cnblogs.com/dongyu666/p/6971783.html
  */
 public class InitItemData {
-    private InitItemData initItemDataStart; //原始数据
-    private InitItemData initItemData;  //修改后的数据
-
     private List<ITEMDATA> ItemDatas;
     private String Battery;
 

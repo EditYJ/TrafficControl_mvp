@@ -19,8 +19,10 @@ import com.alibaba.fastjson.JSON;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.edityj.trafficcontrol_mvp.R;
 import com.edityj.trafficcontrol_mvp.adapter.MyListAdapter;
+import com.edityj.trafficcontrol_mvp.model.bean.ITEMDATA;
 import com.edityj.trafficcontrol_mvp.presenter.ListPresenter;
 import com.edityj.trafficcontrol_mvp.presenter.base.BasePresenter;
+import com.edityj.trafficcontrol_mvp.utils.BornView;
 import com.edityj.trafficcontrol_mvp.utils.DpOrPxUtils;
 import com.edityj.trafficcontrol_mvp.utils.ToastUtil;
 import com.edityj.trafficcontrol_mvp.view.base.BaseView;
@@ -45,38 +47,62 @@ public class MainView extends BaseView implements IMainView{
     private LinearLayout leftScreen;
     private LinearLayout rightScreen;
 
+    private BornView bornView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-        leftScreen = findViewById(R.id.left_screen);
-        rightScreen = findViewById(R.id.right_screen);
+        bornView = new BornView();
+
 //=======================================临时测试代码============================================//
-        ImageView imageView = new ImageView(this);
-        imageView.setImageResource(R.drawable.go_left);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(DpOrPxUtils.dip2px(this,50),DpOrPxUtils.dip2px(this,50));
-        imageView.setLayoutParams(layoutParams);
-        leftScreen.addView(imageView);
+//        ImageView imageView = new ImageView(this);
+//        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(DpOrPxUtils.dip2px(this,50),DpOrPxUtils.dip2px(this,50));
+//        imageView.setLayoutParams(layoutParams);
+//        imageView.setImageResource(R.drawable.go_left);
+//
+//        leftScreen.addView(imageView);
+//
+//        TextView textView = new TextView(this);
+//        textView.setText("禁止通行");
+//        textView.setTextColor(Color.RED);
+////        setTextSize(TypedValue.COMPLEX_UNIT_PX,22); //22像素
+////        setTextSize(TypedValue.COMPLEX_UNIT_SP,22); //22SP
+////        setTextSize(TypedValue.COMPLEX_UNIT_DIP,22);//22DIP
+//        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,28);
+//        textView.setGravity(Gravity.CENTER);
+//        //设置为加粗
+//        textView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+//        //设置不为加粗
+////        textView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
 
-        TextView textView = new TextView(this);
-        textView.setText("禁止通行");
-        textView.setTextColor(Color.RED);
-//        setTextSize(TypedValue.COMPLEX_UNIT_PX,22); //22像素
-//        setTextSize(TypedValue.COMPLEX_UNIT_SP,22); //22SP
-//        setTextSize(TypedValue.COMPLEX_UNIT_DIP,22);//22DIP
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,28);
-        textView.setGravity(Gravity.CENTER);
-        //设置为加粗
-        textView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        //设置不为加粗
-//        textView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-
-        rightScreen.addView(textView);
+//        rightScreen.addView(textView);
 //=============================================================================================//
         initTitleBar();
+        initScreen();
         initBaseListConfig();
         addListClickListener();
         recyclerView.setAdapter(myListAdapter);
+    }
+
+    /**
+     * 初始化屏幕布局
+     */
+    public void initScreen(){
+        leftScreen = findViewById(R.id.left_screen);
+        rightScreen = findViewById(R.id.right_screen);
+        leftScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                leftScreen.removeAllViews();
+            }
+        });
+        rightScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rightScreen.removeAllViews();
+            }
+        });
     }
 
     /**
@@ -165,11 +191,66 @@ public class MainView extends BaseView implements IMainView{
         myListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                ToastUtil.showToast("点击位置："+position);
+                TextView textView;
+                ImageView imageView;
+                int type=listPresenter.getChangeData().get(position).getItemType();
+                String danger=listPresenter.getChangeData().get(position).getDanger();
+                String remind=listPresenter.getChangeData().get(position).getRemind();
+                String speed=listPresenter.getChangeData().get(position).getSpeed();
+                int icon = listPresenter.getChangeData().get(position).getIcon();
+                if(type==ITEMDATA.DANGER_TEXT){
+                    leftScreen.removeAllViews();
+                    rightScreen.removeAllViews();
+                    textView = bornView.getDangerTextView();
+                    textView.setText(danger);
+                    leftScreen.addView(textView,0);
+                    //提示
+                }else if(type==ITEMDATA.REMIND_TEXT){
+                    textView = bornView.getRemindTextView();
+                    textView.setText(remind);
+                    if(leftScreen.getChildAt(0)==null){
+                        leftScreen.addView(textView,0);
+                    }else {
+                        if(rightScreen.getChildAt(0)==null){
+                            rightScreen.addView(textView,0);
+                        }else{
+                            ToastUtil.showToast("请清除内容后再进行设置！");
+                        }
+                    }
+                    //速度
+                }else if(type==ITEMDATA.SPEED_TEXT){
+                    textView = bornView.getSpeedTextView();
+                    textView.setText(speed);
+                    if(leftScreen.getChildAt(0)==null){
+                        leftScreen.addView(textView,0);
+                    }else {
+                        if(rightScreen.getChildAt(0)==null){
+                            rightScreen.addView(textView,0);
+                        }else{
+                            ToastUtil.showToast("请清除内容后再进行设置！");
+                        }
+                    }
+                    //图片
+                }else{
+                    imageView = bornView.getImageView();
+                    imageView.setImageResource(icon);
+                    if(leftScreen.getChildAt(0)==null){
+                        leftScreen.addView(imageView,0);
+                    }else {
+                        if(rightScreen.getChildAt(0)==null){
+                            rightScreen.addView(imageView,0);
+                        }else{
+                            ToastUtil.showToast("请清除内容后再进行设置！");
+                        }
+                    }
+                }
             }
         });
 
     }
+
+
+
 
     /**
      * 获取分割线
