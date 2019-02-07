@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 
 import com.edityj.trafficcontrol_mvp.R;
 import com.edityj.trafficcontrol_mvp.utils.DpOrPxUtils;
+import com.socks.library.KLog;
 
 import static com.edityj.trafficcontrol_mvp.widget.menu.HorizontalExpandMenu.ButtonStyle.Right;
 
@@ -79,6 +80,7 @@ public class HorizontalExpandMenu extends RelativeLayout {
     private boolean isAnimEnd;//动画是否结束
     private View childView;
 
+    private int isSetBac=0;
     public HorizontalExpandMenu(Context context) {
         super(context);
         this.mContext = context;
@@ -222,7 +224,7 @@ public class HorizontalExpandMenu extends RelativeLayout {
      */
     private void expandMenu(int time){
         anim.setDuration(time);
-        isExpand = isExpand ?false:true;
+        isExpand = !isExpand;
         this.startAnimation(anim);
         isAnimEnd = false;
     }
@@ -230,18 +232,34 @@ public class HorizontalExpandMenu extends RelativeLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        KLog.e();
+
         int height = measureSize(defaultHeight, heightMeasureSpec);
         int width = measureSize(defaultWidth, widthMeasureSpec);
-        viewHeight = height;
-        viewWidth = width;
-        setMeasuredDimension(viewWidth,viewHeight);
 
+        //==========================\/============以下暂时的修改===================================//
+        //点击列表菜单会伸出的bug（addView造成的）。
+        // 修改处 todo 最好的方法是修改两个屏幕内容添加的方法，需要另辟蹊径哦，完成后打算仔细想想
+        if(isSetBac<2){
+        //==========================/\============以上暂时的修改===================================//
+
+            viewHeight = height;
+            viewWidth = width;
+            setMeasuredDimension(viewWidth,viewHeight);
+            
+        //==========================\/============以下暂时的修改===================================//
+            isSetBac++;
+        }
+        //==========================/\============以上暂时的修改===================================//
         buttonRadius = viewHeight/2;
+
         layoutRootButton();
 
         //布局代码中如果没有设置background属性则在此处添加一个背景
         if(getBackground()==null){
             setMenuBackground();
+
+            KLog.e();
         }
 
         maxBackPathWidth = viewWidth- buttonRadius *2;
@@ -251,12 +269,15 @@ public class HorizontalExpandMenu extends RelativeLayout {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
+        KLog.e();
         //如果子View数量为0时，onLayout后getLeft()和getRight()才能获取相应数值，menuLeft和menuRight保存menu初始的left和right值
         if(isFirstLayout){
             menuLeft = getLeft();
             menuRight = getRight();
             isFirstLayout = false;
+
         }
+        KLog.e();
         if(getChildCount()>0){
             childView = getChildAt(0);
             if(isExpand){
@@ -274,6 +295,7 @@ public class HorizontalExpandMenu extends RelativeLayout {
                 childView.setVisibility(GONE);
             }
         }
+        KLog.e();
         if(getChildCount()>1){//限制直接子View的数量
             throw new IllegalStateException("HorizontalExpandMenu can host only one direct child");
         }

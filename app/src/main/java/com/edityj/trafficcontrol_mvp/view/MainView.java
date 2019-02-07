@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -46,8 +47,8 @@ public class MainView extends BaseView implements IMainView{
     private MyListAdapter myListAdapter;
     private RecyclerView recyclerView;
 
-    private LinearLayout leftScreen;
-    private LinearLayout rightScreen;
+    private RelativeLayout leftScreen;
+    private RelativeLayout rightScreen;
 
     private BornView bornView;
 
@@ -77,13 +78,13 @@ public class MainView extends BaseView implements IMainView{
         leftScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                leftScreen.removeAllViews();
+                leftScreen.removeAllViewsInLayout();
             }
         });
         rightScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                rightScreen.removeAllViews();
+                rightScreen.removeAllViewsInLayout();
             }
         });
     }
@@ -151,8 +152,8 @@ public class MainView extends BaseView implements IMainView{
                 String speed=listPresenter.getChangeData().get(position).getSpeed();
                 int icon = listPresenter.getChangeData().get(position).getIcon();
                 if(type==ITEMDATA.DANGER_TEXT){
-                    leftScreen.removeAllViews();
-                    rightScreen.removeAllViews();
+                    leftScreen.removeAllViewsInLayout();
+                    rightScreen.removeAllViewsInLayout();
                     textView = bornView.getDangerTextView();
                     textView.setText(danger);
                     leftScreen.addView(textView,0);
@@ -283,8 +284,8 @@ public class MainView extends BaseView implements IMainView{
     //清空
     public void clear(View view) {
         ToastUtil.showToast("清空");
-        leftScreen.removeAllViews();
-        rightScreen.removeAllViews();
+        leftScreen.removeAllViewsInLayout();
+        rightScreen.removeAllViewsInLayout();
     }
 
     //添加
