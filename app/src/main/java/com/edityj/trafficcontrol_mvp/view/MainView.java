@@ -1,12 +1,15 @@
 package com.edityj.trafficcontrol_mvp.view;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,6 +29,7 @@ import com.edityj.trafficcontrol_mvp.view.base.BaseView;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.jaeger.library.StatusBarUtil;
+import com.longsh.optionframelibrary.OptionMaterialDialog;
 import com.socks.library.KLog;
 
 import java.util.List;
@@ -285,12 +289,86 @@ public class MainView extends BaseView implements IMainView{
 
     //添加
     public void add(View view) {
-        ToastUtil.showToast("添加");
+//        ToastUtil.showToast("添加");
+        final OptionMaterialDialog mMaterialDialog = new OptionMaterialDialog(this);
+        final View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add, null);
+        final EditText editText = dialogView.findViewById(R.id.dialog_edit_add);
+        mMaterialDialog.setView(dialogView);
+        mMaterialDialog.setTitle("这是标题")
+//                .setTitleTextColor(R.color.colorPrimary)
+//                .setTitleTextSize((float) 22.5)
+//                .setMessage("支持所有布局文字大小颜色等设置。")
+//                .setMessageTextColor(R.color.colorPrimary)
+//                .setMessageTextSize((float) 16.5)
+//                .setPositiveButtonTextColor(R.color.colorAccent)
+//                .setNegativeButtonTextColor(R.color.colorPrimary)
+//                .setPositiveButtonTextSize(15)
+//                .setNegativeButtonTextSize(15)
+                .setPositiveButton("确定", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String text = editText.getText().toString().trim();
+                        ToastUtil.showToast(text);
+                        listPresenter.addRemindContent(myListAdapter, text, 2);
+                        mMaterialDialog.dismiss();
+                    }
+                })
+                .setNegativeButton("取消",
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mMaterialDialog.dismiss();
+                            }
+                        })
+                .setCanceledOnTouchOutside(true)
+                .setOnDismissListener(
+                        new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                //对话框消失后回调
+                            }
+                        })
+                .show();
     }
 
     //调整亮度
     public void changeLight(View view) {
         ToastUtil.showToast("调整亮度");
+        final OptionMaterialDialog mMaterialDialog = new OptionMaterialDialog(this);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_light, null);
+        mMaterialDialog.setView(dialogView);
+        mMaterialDialog.setTitle("这是标题")
+//                .setTitleTextColor(R.color.colorPrimary)
+//                .setTitleTextSize((float) 22.5)
+//                .setMessage("支持所有布局文字大小颜色等设置。")
+//                .setMessageTextColor(R.color.colorPrimary)
+//                .setMessageTextSize((float) 16.5)
+//                .setPositiveButtonTextColor(R.color.colorAccent)
+//                .setNegativeButtonTextColor(R.color.colorPrimary)
+//                .setPositiveButtonTextSize(15)
+//                .setNegativeButtonTextSize(15)
+                .setPositiveButton("确定", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mMaterialDialog.dismiss();
+                    }
+                })
+                .setNegativeButton("取消",
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mMaterialDialog.dismiss();
+                            }
+                        })
+                .setCanceledOnTouchOutside(true)
+                .setOnDismissListener(
+                        new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                //对话框消失后回调
+                            }
+                        })
+                .show();
     }
 
 //

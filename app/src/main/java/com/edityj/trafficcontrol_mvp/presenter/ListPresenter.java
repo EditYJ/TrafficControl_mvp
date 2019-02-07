@@ -2,6 +2,7 @@ package com.edityj.trafficcontrol_mvp.presenter;
 
 import android.support.v7.widget.RecyclerView;
 
+import com.edityj.trafficcontrol_mvp.adapter.MyListAdapter;
 import com.edityj.trafficcontrol_mvp.application.AppInfo;
 import com.edityj.trafficcontrol_mvp.config.ConfigOfApp;
 import com.edityj.trafficcontrol_mvp.model.InitItemData;
@@ -41,6 +42,14 @@ public class ListPresenter extends BasePresenter<MainView> {
     public void resetData() {
         getChangeData().clear();
         getChangeData().addAll(getStartData());
+        saveStatus();
+    }
+
+    public void addRemindContent(MyListAdapter myListAdapter, String remindText, int position) {
+        ITEMDATA itemdata = new ITEMDATA();
+        itemdata.setRemind(remindText);
+        itemdata.setItemType(ITEMDATA.REMIND_TEXT);
+        myListAdapter.addData(position,itemdata);
         saveStatus();
     }
 }

@@ -51,4 +51,9 @@ dependencies {
     //StatusBarUtil 状态栏工具类
     //github:https://github.com/laobie/StatusBarUtil
     implementation 'com.jaeger.statusbarutil:library:1.5.1'
+
+    //Android一款界面良好使用简单的弹出框
+    //参考资料：https://www.jianshu.com/p/2a90c3f0fbf3
+    //github：https://github.com/q805699513/OptionFrame
+    implementation 'com.longsh:OptionFrame:1.0.0'
 }
