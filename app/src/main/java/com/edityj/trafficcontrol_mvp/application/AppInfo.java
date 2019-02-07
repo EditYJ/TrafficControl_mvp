@@ -94,14 +94,21 @@ public class AppInfo {
             KLog.json(getChangeData);
             //第二次打开初始化数据
             list.addAll(JSON.parseArray(getChangeData, ITEMDATA.class));
+            listStart.addAll(JSON.parseArray(getStartData, ITEMDATA.class));
             for(int j =0;j<list.size();j++){
                 int x=list.get(j).getIconID();
                 if(x!=0){
                     list.get(j).setIcon(icon.getResourceId(x-1,0));
                 }
             }
+            for(int k=0;k<listStart.size();k++){
+                int y=listStart.get(k).getIconID();
+                if(y!=0){
+                    listStart.get(k).setIcon(icon.getResourceId(y-1,0));
+                }
+            }
             //KLog.e(list.size());
-            listStart.addAll(JSON.parseArray(getStartData, ITEMDATA.class));
+
         }
     }
 }

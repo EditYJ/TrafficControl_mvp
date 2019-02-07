@@ -25,6 +25,8 @@ public class ITEMDATA implements MultiItemEntity {
     private String speed;
     private int icon;
     private int iconID;
+    private int moveIcon;
+    private int deleteIcon;
 
     public ITEMDATA(){
         this.itemType=0;
@@ -33,10 +35,28 @@ public class ITEMDATA implements MultiItemEntity {
         this.speed=null;
         this.icon=0;
         this.iconID=0;
+        this.moveIcon=0;
+        this.deleteIcon=0;
     }
 
     public ITEMDATA(int itemType) {
         this.itemType = itemType;
+    }
+
+    public int getDeleteIcon() {
+        return deleteIcon;
+    }
+
+    public void setDeleteIcon(int deleteIcon) {
+        this.deleteIcon = deleteIcon;
+    }
+
+    public int getMoveIcon() {
+        return moveIcon;
+    }
+
+    public void setMoveIcon(int moveIcon) {
+        this.moveIcon = moveIcon;
     }
 
     public String getDanger() {

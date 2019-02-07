@@ -33,4 +33,14 @@ public class ListPresenter extends BasePresenter<MainView> {
 //        getChangeData().remove(pos);
             AppInfo.Sp.setListToJosn(ConfigOfApp.APP_LIST_DATA, list);
     }
+
+    public void saveStatus() {
+        AppInfo.Sp.setListToJosn(ConfigOfApp.APP_LIST_DATA, getChangeData());
+    }
+
+    public void resetData() {
+        getChangeData().clear();
+        getChangeData().addAll(getStartData());
+        saveStatus();
+    }
 }

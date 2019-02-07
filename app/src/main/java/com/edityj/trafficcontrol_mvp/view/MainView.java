@@ -1,35 +1,34 @@
 package com.edityj.trafficcontrol_mvp.view;
 
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
-import android.view.Gravity;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
+import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.edityj.trafficcontrol_mvp.R;
 import com.edityj.trafficcontrol_mvp.adapter.MyListAdapter;
 import com.edityj.trafficcontrol_mvp.model.bean.ITEMDATA;
 import com.edityj.trafficcontrol_mvp.presenter.ListPresenter;
 import com.edityj.trafficcontrol_mvp.presenter.base.BasePresenter;
 import com.edityj.trafficcontrol_mvp.utils.BornView;
-import com.edityj.trafficcontrol_mvp.utils.DpOrPxUtils;
 import com.edityj.trafficcontrol_mvp.utils.ToastUtil;
 import com.edityj.trafficcontrol_mvp.view.base.BaseView;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.jaeger.library.StatusBarUtil;
 import com.socks.library.KLog;
+
+import java.util.List;
 
 /**
  * @author EditYJ
@@ -48,6 +47,8 @@ public class MainView extends BaseView implements IMainView{
 
     private BornView bornView;
 
+    private boolean isHide=true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +59,9 @@ public class MainView extends BaseView implements IMainView{
         initBaseListConfig();
         addListClickListener();
         recyclerView.setAdapter(myListAdapter);
+
+
+
     }
 
     /**
@@ -190,6 +194,29 @@ public class MainView extends BaseView implements IMainView{
                 }
             }
         });
+
+        //删除按钮点击事件
+        myListAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                myListAdapter.remove(position);
+            }
+        });
+
+        // 开启拖拽
+        ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(myListAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+        OnItemDragListener onItemDragListener = new OnItemDragListener() {
+            @Override
+            public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos){}
+            @Override
+            public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {}
+            @Override
+            public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {}
+        };
+        myListAdapter.enableDragItem(itemTouchHelper, R.id.img_move_icon, true);
+        myListAdapter.setOnItemDragListener(onItemDragListener);
     }
 
     /**
@@ -217,17 +244,43 @@ public class MainView extends BaseView implements IMainView{
     //======================================悬浮菜单点击事件设置===================================//
     //重置
     public void reset(View view) {
+        listPresenter.resetData();
+        myListAdapter.notifyDataSetChanged();
         ToastUtil.showToast("重置");
     }
 
-    //编辑
+    //开启和关闭编辑功能
     public void editer(View view) {
-        ToastUtil.showToast("编辑");
+//        ToastUtil.showToast("编辑");
+        List<ITEMDATA> list=listPresenter.getChangeData();
+        if(isHide){
+            for(int k=0;k<list.size();k++){
+                list.get(k).setMoveIcon(R.drawable.move_icon);
+                if(list.get(k).getRemind()!=null){
+                    list.get(k).setDeleteIcon(R.drawable.delete_icon);
+                }
+            }
+            ((TextView)view).setText("完成");
+            isHide=false;
+        }else{
+            for(int k=0;k<list.size();k++){
+                list.get(k).setMoveIcon(0);
+                if(list.get(k).getRemind()!=null){
+                    list.get(k).setDeleteIcon(0);
+                }
+            }
+            listPresenter.saveStatus();
+            ((TextView)view).setText("编辑");
+            isHide=true;
+        }
+        myListAdapter.notifyDataSetChanged();
     }
 
     //清空
     public void clear(View view) {
         ToastUtil.showToast("清空");
+        leftScreen.removeAllViews();
+        rightScreen.removeAllViews();
     }
 
     //添加
@@ -239,4 +292,6 @@ public class MainView extends BaseView implements IMainView{
     public void changeLight(View view) {
         ToastUtil.showToast("调整亮度");
     }
+
+//
 }

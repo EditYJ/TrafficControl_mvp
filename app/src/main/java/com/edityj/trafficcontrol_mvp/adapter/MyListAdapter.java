@@ -1,5 +1,7 @@
 package com.edityj.trafficcontrol_mvp.adapter;
 
+import android.view.View;
+
 import com.chad.library.adapter.base.BaseItemDraggableAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
@@ -34,6 +36,12 @@ public class MyListAdapter extends BaseItemDraggableAdapter<ITEMDATA, BaseViewHo
 
     @Override
     protected void convert(BaseViewHolder helper, ITEMDATA item) {
+        helper.setImageResource(R.id.img_move_icon, item.getMoveIcon());
+        if(item.getMoveIcon()==0){
+            helper.getView(R.id.img_move_icon).setVisibility(View.GONE);
+        }else{
+            helper.getView(R.id.img_move_icon).setVisibility(View.VISIBLE);
+        }
         //找到item上某个控件，并且给它赋值
         switch (helper.getItemViewType()) {
             case ITEMDATA.DANGER_TEXT:
@@ -41,13 +49,27 @@ public class MyListAdapter extends BaseItemDraggableAdapter<ITEMDATA, BaseViewHo
                 break;
             case ITEMDATA.REMIND_TEXT:
                 helper.setText(R.id.text_remind, item.getRemind());
+                helper.setImageResource(R.id.img_move_icon, item.getMoveIcon());
+                helper.setImageResource(R.id.img_delete_icon, item.getDeleteIcon());
+                if(item.getDeleteIcon()==0){
+                    helper.getView(R.id.img_delete_icon).setVisibility(View.GONE);
+                }else{
+                    helper.getView(R.id.img_delete_icon).setVisibility(View.VISIBLE);
+                    helper.addOnClickListener(R.id.img_delete_icon);
+                }
                 break;
             case ITEMDATA.SPEED_TEXT:
                 helper.setText(R.id.text_speed,item.getSpeed());
+                helper.setImageResource(R.id.img_move_icon, item.getMoveIcon());
                 break;
             case ITEMDATA.ICON_PIC:
                 helper.setImageResource(R.id.im_traffic_icon, item.getIcon());
+                helper.setImageResource(R.id.img_move_icon, item.getMoveIcon());
                 break;
         }
+
+
     }
+
+
 }
