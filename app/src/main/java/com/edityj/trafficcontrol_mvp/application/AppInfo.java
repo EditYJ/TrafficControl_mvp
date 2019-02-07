@@ -85,11 +85,21 @@ public class AppInfo {
             //使用fastJSON对应的实体类要有默认传入参数为空的构造方法
             //使用fastJSON对应的实体类内部的所有需要的变量都需要写上get和set方法
             //还有Sp.getString返回的可能不是标准的字符串，得赋值到对应的字符串变量，才能让JSON.parseArray起作用
+
+            //图片数据需要动态加载
+            icon = mainApplication.getResources().obtainTypedArray(R.array.icon);
+
             String getChangeData = Sp.getString(ConfigOfApp.APP_LIST_DATA,"NONEData");
             String getStartData = Sp.getString(ConfigOfApp.APP_LIST_RESET_DATA,"NONEData");
             KLog.json(getChangeData);
             //第二次打开初始化数据
             list.addAll(JSON.parseArray(getChangeData, ITEMDATA.class));
+            for(int j =0;j<list.size();j++){
+                int x=list.get(j).getIconID();
+                if(x!=0){
+                    list.get(j).setIcon(icon.getResourceId(x-1,0));
+                }
+            }
             //KLog.e(list.size());
             listStart.addAll(JSON.parseArray(getStartData, ITEMDATA.class));
         }

@@ -31,7 +31,6 @@ import com.hjq.bar.TitleBar;
 import com.jaeger.library.StatusBarUtil;
 import com.socks.library.KLog;
 
-
 /**
  * @author EditYJ
  * @Email 158392613@qq.com
@@ -54,30 +53,6 @@ public class MainView extends BaseView implements IMainView{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         bornView = new BornView();
-
-//=======================================临时测试代码============================================//
-//        ImageView imageView = new ImageView(this);
-//        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(DpOrPxUtils.dip2px(this,50),DpOrPxUtils.dip2px(this,50));
-//        imageView.setLayoutParams(layoutParams);
-//        imageView.setImageResource(R.drawable.go_left);
-//
-//        leftScreen.addView(imageView);
-//
-//        TextView textView = new TextView(this);
-//        textView.setText("禁止通行");
-//        textView.setTextColor(Color.RED);
-////        setTextSize(TypedValue.COMPLEX_UNIT_PX,22); //22像素
-////        setTextSize(TypedValue.COMPLEX_UNIT_SP,22); //22SP
-////        setTextSize(TypedValue.COMPLEX_UNIT_DIP,22);//22DIP
-//        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,28);
-//        textView.setGravity(Gravity.CENTER);
-//        //设置为加粗
-//        textView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-//        //设置不为加粗
-////        textView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-
-//        rightScreen.addView(textView);
-//=============================================================================================//
         initTitleBar();
         initScreen();
         initBaseListConfig();
@@ -150,37 +125,6 @@ public class MainView extends BaseView implements IMainView{
         //设置动画效果
         //ALPHAIN(渐显),SCALEIN(缩放),SLIDEIN_BOTTOM,SLIDEIN_LEFT,SLIDEIN_RIGHT 等等
         myListAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-//        //开启滑动删除等功能
-//        ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(myListAdapter);
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
-//        itemTouchHelper.attachToRecyclerView(recyclerView);
-//        OnItemSwipeListener onItemSwipeListener = new OnItemSwipeListener() {
-//            //滑动开始时
-//            @Override
-//            public void onItemSwipeStart(RecyclerView.ViewHolder viewHolder, int pos) {
-//                KLog.e(listPresenter.getChangeData().size());
-//            }
-//            //列表元素消失后
-//            @Override
-//            public void clearView(RecyclerView.ViewHolder viewHolder, int pos) {
-//                KLog.e(listPresenter.getChangeData().size());
-//                listPresenter.delSessionData(listPresenter.getChangeData());
-//            }
-//            //滑动后,列表不一定消失
-//            @Override
-//            public void onItemSwiped(RecyclerView.ViewHolder viewHolder, int pos) {
-//                //删除缓存数据
-//                KLog.e(listPresenter.getChangeData().size());
-//            }
-//            //滑动时
-//            @Override
-//            public void onItemSwipeMoving(Canvas canvas, RecyclerView.ViewHolder viewHolder, float dX, float dY, boolean isCurrentlyActive) {
-//                //KLog.e(listPresenter.getChangeData().size());
-//            }
-//        };
-//        // 开启滑动删除
-//        myListAdapter.enableSwipeItem();
-//        myListAdapter.setOnItemSwipeListener(onItemSwipeListener);
     }
 
     /**
@@ -246,11 +190,7 @@ public class MainView extends BaseView implements IMainView{
                 }
             }
         });
-
     }
-
-
-
 
     /**
      * 获取分割线
