@@ -246,7 +246,7 @@ public class HorizontalExpandMenu extends RelativeLayout {
             viewHeight = height;
             viewWidth = width;
             setMeasuredDimension(viewWidth,viewHeight);
-            
+
         //==========================\/============以下暂时的修改===================================//
             isSetBac++;
         }
