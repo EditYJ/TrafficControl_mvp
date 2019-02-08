@@ -14,6 +14,7 @@ import com.edityj.trafficcontrol_mvp.utils.ToastUtil;
 import com.edityj.trafficcontrol_mvp.view.MainView;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -84,12 +85,16 @@ public class ListPresenter extends BasePresenter<MainView> {
             }
         });
         SocketUtil.sharedCenter().connect();
+        //稍等一会发送消息，目的就是让链接创建完成
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                SocketUtil.sharedCenter().send(params.getBytes());
+                try {
+                    SocketUtil.sharedCenter().send(params.getBytes(ConfigOfApp.CHAR_SET));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
             }
         }, 1000);
-
     }
 }

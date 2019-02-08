@@ -1,5 +1,5 @@
 package com.edityj.trafficcontrol_mvp.utils;
-import com.edityj.trafficcontrol_mvp.view.base.IBaseView;
+import com.edityj.trafficcontrol_mvp.config.ConfigOfApp;
 import com.socks.library.KLog;
 
 import java.io.IOException;
@@ -144,7 +144,7 @@ public class SocketUtil {
                 byte[] bs = new byte[length];
                 System.arraycopy(bt, 0, bs, 0, length);
 
-                String str = new String(bs, "UTF-8");
+                String str = new String(bs, ConfigOfApp.CHAR_SET);
                 if (str != null) {
                     if (tcpCallback != null) {
                         tcpCallback.onSuccess(str);
@@ -170,7 +170,7 @@ public class SocketUtil {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if (socket != null) {
+                if (socket != null && outputStream!=null) {
                     try {
                         outputStream.write(data);
                         outputStream.flush();
