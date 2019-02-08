@@ -1,6 +1,5 @@
 package com.edityj.trafficcontrol_mvp.utils;
-
-import android.util.Log;
+import com.socks.library.KLog;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,16 +66,16 @@ public class SocketUtil {
                         outputStream = socket.getOutputStream();
                         inputStream = socket.getInputStream();
                         receive();
-                        Log.i(TAG,"连接成功");
+                        KLog.i(TAG,"连接成功");
                     }else {
-                        Log.i(TAG,"连接失败");
+                        KLog.i(TAG,"连接失败");
                         if (tcpCallback != null) {
                             tcpCallback.disConnect(new IOException("连接失败"));
                         }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Log.e(TAG,"连接异常");
+                    KLog.e(TAG,"连接异常");
                     if (tcpCallback != null) {
                         tcpCallback.disConnect(e);
                     }
@@ -137,9 +136,9 @@ public class SocketUtil {
                         tcpCallback.receive(str);
                     }
                 }
-                Log.i(TAG,"接收成功");
+                KLog.i(TAG,"接收成功");
             } catch (IOException e) {
-                Log.i(TAG,"接收失败");
+                KLog.i(TAG,"接收失败");
             }
         }
     }
@@ -156,10 +155,10 @@ public class SocketUtil {
                     try {
                         outputStream.write(data);
                         outputStream.flush();
-                        Log.i(TAG,"发送成功");
+                        KLog.i(TAG,"发送成功");
                     } catch (IOException e) {
                         e.printStackTrace();
-                        Log.i(TAG,"发送失败");
+                        KLog.i(TAG,"发送失败");
                     }
                 } else {
                     connect();

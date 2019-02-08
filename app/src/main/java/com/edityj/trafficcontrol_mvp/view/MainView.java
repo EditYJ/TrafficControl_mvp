@@ -78,13 +78,13 @@ public class MainView extends BaseView implements IMainView{
         leftScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                leftScreen.removeAllViewsInLayout();
+                leftScreen.removeAllViews();
             }
         });
         rightScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                rightScreen.removeAllViewsInLayout();
+                rightScreen.removeAllViews();
             }
         });
     }
@@ -152,8 +152,8 @@ public class MainView extends BaseView implements IMainView{
                 String speed=listPresenter.getChangeData().get(position).getSpeed();
                 int icon = listPresenter.getChangeData().get(position).getIcon();
                 if(type==ITEMDATA.DANGER_TEXT){
-                    leftScreen.removeAllViewsInLayout();
-                    rightScreen.removeAllViewsInLayout();
+                    leftScreen.removeAllViews();
+                    rightScreen.removeAllViews();
                     textView = bornView.getDangerTextView();
                     textView.setText(danger);
                     leftScreen.addView(textView,0);
@@ -284,8 +284,8 @@ public class MainView extends BaseView implements IMainView{
     //清空
     public void clear(View view) {
         ToastUtil.showToast("清空");
-        leftScreen.removeAllViewsInLayout();
-        rightScreen.removeAllViewsInLayout();
+        leftScreen.removeAllViews();
+        rightScreen.removeAllViews();
     }
 
     //添加
