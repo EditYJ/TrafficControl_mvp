@@ -6,6 +6,9 @@ package com.edityj.trafficcontrol_mvp.config;
  * description: 应用内一些公用的变量
  */
 public final class ConfigOfApp {
+    public final static String SERVER_IP="192.168.31.96";
+    public final static int SERVER_PORT=6666;
+
     public final static String APP_SESSION="TC_session";
     public final static String APP_LIST_RESET_DATA="list_reset_data";   //用于重置
     public final static String APP_LIST_DATA="list_data";   //可变化

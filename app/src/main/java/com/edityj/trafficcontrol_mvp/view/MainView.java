@@ -112,6 +112,7 @@ public class MainView extends BaseView implements IMainView{
             @Override
             public void onRightClick(View v) {
                 ToastUtil.showToast("右项View被点击");
+                listPresenter.getData("点击你好！");
             }
         });
     }

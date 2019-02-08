@@ -65,7 +65,7 @@ public abstract class BaseView extends Activity implements IBaseView{
 
     @Override
     public void showError() {
-        ToastUtil.showToast("未知错误");
+        ToastUtil.showToast("连接出现问题，请检查wifi");
     }
 
     @Override

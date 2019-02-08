@@ -3,6 +3,8 @@ package com.edityj.trafficcontrol_mvp.application;
 import android.app.Application;
 
 import com.edityj.trafficcontrol_mvp.BuildConfig;
+import com.edityj.trafficcontrol_mvp.config.ConfigOfApp;
+import com.edityj.trafficcontrol_mvp.utils.SocketUtil;
 import com.socks.library.KLog;
 
 /**
@@ -24,6 +26,9 @@ public class MainApplication extends Application {
         //初始化KLog
         KLog.init(BuildConfig.LOG_DEBUG, TAG);
         AppInfo.init();
+        //初始化socket工具类
+        SocketUtil.sharedCenter().setIpAddress(ConfigOfApp.SERVER_IP);
+        SocketUtil.sharedCenter().setPort(ConfigOfApp.SERVER_PORT);
     }
 
     /**

@@ -1,9 +1,11 @@
 package com.edityj.trafficcontrol_mvp.utils;
+import com.edityj.trafficcontrol_mvp.view.base.IBaseView;
 import com.socks.library.KLog;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 /**
@@ -43,6 +45,15 @@ public class SocketUtil {
         }
         return instance;
     }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
     /**
      * 通过IP地址(域名)和端口进行连接
      *
@@ -50,35 +61,38 @@ public class SocketUtil {
      * @param port       端口
      */
     public void connect(final String ipAddress, final int port) {
-
+        tcpCallback.onStart();
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    socket = new Socket(ipAddress, port);
-                    socket.setSoTimeout ( 2 * 2000 );//设置超时时间
+                    socket = new Socket();
+                    socket.setSoTimeout ( 2 * 2000 );//设置接收数据超时时间
+                    socket.connect(new InetSocketAddress(ipAddress, port), 1000);//设置地址和连接超时时间
                     if (isConnected()) {
+                        KLog.i(TAG,"连接成功");
                         SocketUtil.sharedCenter().ipAddress = ipAddress;
                         SocketUtil.sharedCenter().port = port;
-                        if (tcpCallback != null) {
-                            tcpCallback.connected();
-                        }
+//                        if (tcpCallback != null) {
+//                            tcpCallback.connected();
+//                        }
                         outputStream = socket.getOutputStream();
                         inputStream = socket.getInputStream();
                         receive();
-                        KLog.i(TAG,"连接成功");
                     }else {
                         KLog.i(TAG,"连接失败");
                         if (tcpCallback != null) {
-                            tcpCallback.disConnect(new IOException("连接失败"));
+                            tcpCallback.onFailure(new IOException("连接失败"));
                         }
+                        tcpCallback.onComplete();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                     KLog.e(TAG,"连接异常");
                     if (tcpCallback != null) {
-                        tcpCallback.disConnect(e);
+                        tcpCallback.onFailure(e);
                     }
+                    tcpCallback.onComplete();
                 }
             }
         });
@@ -106,11 +120,11 @@ public class SocketUtil {
                     outputStream.close();
                 }
                 socket.close();
-                if (socket.isClosed()) {
-                    if (tcpCallback != null) {
-                        tcpCallback.disConnect(new IOException("断开连接"));
-                    }
-                }
+//                if (socket.isClosed()) {
+//                    if (tcpCallback != null) {
+//                        tcpCallback.disConnect(new IOException("断开连接"));
+//                    }
+//                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -133,12 +147,17 @@ public class SocketUtil {
                 String str = new String(bs, "UTF-8");
                 if (str != null) {
                     if (tcpCallback != null) {
-                        tcpCallback.receive(str);
+                        tcpCallback.onSuccess(str);
                     }
                 }
                 KLog.i(TAG,"接收成功");
+                disconnect();
+                tcpCallback.onComplete();
             } catch (IOException e) {
                 KLog.i(TAG,"接收失败");
+                tcpCallback.onFailure(e);
+                disconnect();
+                tcpCallback.onComplete();
             }
         }
     }
@@ -158,6 +177,7 @@ public class SocketUtil {
                         KLog.i(TAG,"发送成功");
                     } catch (IOException e) {
                         e.printStackTrace();
+                        tcpCallback.onFailure(e);
                         KLog.i(TAG,"发送失败");
                     }
                 } else {
@@ -168,12 +188,15 @@ public class SocketUtil {
     }
 
     public interface TcpCallback{
-        //创建链接
-        void connected();
+        //开始连接
+        void onStart();
+        //请求完成
+        void onComplete();
+        //连接成功接受服务器返回数据
+        void onSuccess(String receicedMessage);
         //连接异常
-        void disConnect(IOException e);
-        //接受服务器返回数据
-        void receive(String receicedMessage);
+        void onFailure(IOException e);
+
     }
 
     public void setTcpCallback(TcpCallback tcpCallback){

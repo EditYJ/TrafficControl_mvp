@@ -1,5 +1,6 @@
 package com.edityj.trafficcontrol_mvp.presenter;
 
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 
 import com.edityj.trafficcontrol_mvp.adapter.MyListAdapter;
@@ -8,8 +9,11 @@ import com.edityj.trafficcontrol_mvp.config.ConfigOfApp;
 import com.edityj.trafficcontrol_mvp.model.InitItemData;
 import com.edityj.trafficcontrol_mvp.model.bean.ITEMDATA;
 import com.edityj.trafficcontrol_mvp.presenter.base.BasePresenter;
+import com.edityj.trafficcontrol_mvp.utils.SocketUtil;
+import com.edityj.trafficcontrol_mvp.utils.ToastUtil;
 import com.edityj.trafficcontrol_mvp.view.MainView;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -51,5 +55,41 @@ public class ListPresenter extends BasePresenter<MainView> {
         itemdata.setItemType(ITEMDATA.REMIND_TEXT);
         myListAdapter.addData(position,itemdata);
         saveStatus();
+    }
+
+    public void getData(final String params){
+        if (!isAttached()) {
+            //如果没有View引用就不加载数据
+            return;
+        }
+        SocketUtil.sharedCenter().setTcpCallback(new SocketUtil.TcpCallback() {
+            @Override
+            public void onStart() {
+                getView().showLoading();
+            }
+
+            @Override
+            public void onComplete() {
+                getView().hideLoading();
+            }
+
+            @Override
+            public void onSuccess(String receicedMessage) {
+                getView().showToast(receicedMessage);
+            }
+
+            @Override
+            public void onFailure(IOException e) {
+                getView().showError();
+            }
+        });
+        SocketUtil.sharedCenter().connect();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                SocketUtil.sharedCenter().send(params.getBytes());
+            }
+        }, 1000);
+
     }
 }
