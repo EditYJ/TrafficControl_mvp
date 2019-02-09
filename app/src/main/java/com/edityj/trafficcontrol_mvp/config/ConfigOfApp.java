@@ -26,4 +26,5 @@ public final class ConfigOfApp {
     public final static String SEND_IMG_HEAD="t";
     public final static String SEND_WARNING_MSG_HEAD="$$";
     public final static String SEND_WARNING_MSG_END=",,";
+    public final static String BATTERY_DIV="%";
 }

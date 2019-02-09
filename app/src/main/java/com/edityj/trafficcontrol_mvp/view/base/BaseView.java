@@ -64,7 +64,11 @@ public abstract class BaseView extends Activity implements IBaseView{
 
     @Override
     public void showToast(String msg) {
-        ToastUtil.showToast(msg);
+        if(msg.equals("OK")){
+            ToastUtil.showToast("设置成功");
+        }else{
+            //ToastUtil.showToast("服务器返回："+msg);
+        }
     }
 
     @Override

@@ -3,4 +3,5 @@
     <string name="test_word">测试文字</string>
     <string name="add_remind">添加提醒词汇</string>
     <string name="change_light">调整亮度</string>
+    <string name="light_value">输入亮度值1~10</string>
 </resources>

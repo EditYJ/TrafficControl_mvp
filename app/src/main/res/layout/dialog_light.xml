@@ -29,9 +29,10 @@
         android:layout_below="@+id/dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="number"
         android:layout_marginStart="@dimen/dp_10"
         android:layout_marginEnd="@dimen/dp_10"
-        android:hint="@string/test_word"/>
+        android:hint="@string/light_value"/>
 
 
 </RelativeLayout>

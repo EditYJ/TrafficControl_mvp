@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
 
+import com.edityj.trafficcontrol_mvp.R;
 import com.edityj.trafficcontrol_mvp.adapter.MyListAdapter;
 import com.edityj.trafficcontrol_mvp.application.AppInfo;
 import com.edityj.trafficcontrol_mvp.config.ConfigOfApp;
@@ -27,7 +28,7 @@ import java.util.List;
  */
 
 public class ListPresenter extends BasePresenter<MainView> {
-
+    private String msg = "";
     public List<ITEMDATA> getStartData() {
         return InitItemData.getStartInstance().getInitItemDatas();
     }
@@ -59,10 +60,11 @@ public class ListPresenter extends BasePresenter<MainView> {
         saveStatus();
     }
 
-    public void getData(final String params) {
+    public String getData(final String params) {
+
         if (!isAttached()) {
             //如果没有View引用就不加载数据
-            return;
+            return null;
         }
         SocketUtil.sharedCenter().setTcpCallback(new SocketUtil.TcpCallback() {
             @Override
@@ -88,10 +90,11 @@ public class ListPresenter extends BasePresenter<MainView> {
                         //这种情况下，Runnable对象是运行在主线程中的，不可以进行联网操作，但是可以更新UI
                     }
                 }.start();
+                msg=receicedMessage;
             }
 
             @Override
-            public void onFailure(IOException e) {
+            public void onFailure(final IOException e) {
                 new Thread() {
                     public void run() {
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -117,5 +120,6 @@ public class ListPresenter extends BasePresenter<MainView> {
                 }
             }
         }, 100);
+        return msg;
     }
 }

@@ -70,6 +70,8 @@ public class MainView extends BaseView implements IMainView {
 
     }
 
+
+
     /**
      * 初始化屏幕布局
      */
@@ -103,7 +105,14 @@ public class MainView extends BaseView implements IMainView {
             //获取电量
             @Override
             public void onLeftClick(View v) {
-                ToastUtil.showToast("左项View被点击");
+                String msg=listPresenter.getData(ConfigOfApp.CHECK_BATTERY);
+                if(msg==null || msg.length()==0){
+//                    ToastUtil.showToast("电量获取失败，请重试");
+                }else{
+                    String[]  strs=msg.split(" ");
+                    msg = strs[0]+ConfigOfApp.BATTERY_DIV;
+                    ((TextView)v).setText(msg);
+                }
             }
 
             //中间标题
@@ -408,13 +417,20 @@ public class MainView extends BaseView implements IMainView {
     public void changeLight(View view) {
         ToastUtil.showToast("调整亮度");
         final OptionMaterialDialog mMaterialDialog = new OptionMaterialDialog(this);
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_light, null);
+        final View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_light, null);
         mMaterialDialog.setView(dialogView);
         mMaterialDialog.setTitle("这是标题")
                 .setPositiveButton("确定", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mMaterialDialog.dismiss();
+                        String text = ((EditText)dialogView.findViewById(R.id.dialog_edit_light)).getText().toString().trim();
+                        if(Integer.valueOf(text)<1 || Integer.valueOf(text)>10){
+                            ToastUtil.showToast("输入数字超出范围，请重新输入");
+                            ((EditText)dialogView.findViewById(R.id.dialog_edit_light)).setText("");
+                        }else{
+                            mMaterialDialog.dismiss();
+                            listPresenter.getData(ConfigOfApp.CHANGE_LIGHT+text);
+                        }
                     }
                 })
                 .setNegativeButton("取消",
