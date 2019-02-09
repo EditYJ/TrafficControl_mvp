@@ -46,6 +46,7 @@ dependencies {
 
     //A simple generic title bar
     //github:https://github.com/getActivity/TitleBar
+    //另外还有一款强大的,后面的项目可以试试，github：https://github.com/wuhenzhizao/android-titlebar
     implementation 'com.hjq:titlebar:5.0'
 
     //StatusBarUtil 状态栏工具类

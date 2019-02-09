@@ -1,4 +1,6 @@
 package com.edityj.trafficcontrol_mvp.utils;
+import android.os.Handler;
+
 import com.edityj.trafficcontrol_mvp.config.ConfigOfApp;
 import com.socks.library.KLog;
 
@@ -24,6 +26,7 @@ public class SocketUtil {
 //    端口号
     private int port;
     private Thread thread;
+    private Handler handler;
 //    Socket输出流
     private OutputStream outputStream;
 //    Socket输入流
@@ -33,6 +36,7 @@ public class SocketUtil {
 //    构造函数私有化
     private SocketUtil() {
         super();
+        handler=new Handler();
     }
 //    提供一个全局的静态方法
     public static SocketUtil sharedCenter() {
@@ -61,6 +65,7 @@ public class SocketUtil {
      * @param port       端口
      */
     public void connect(final String ipAddress, final int port) {
+
         tcpCallback.onStart();
         thread = new Thread(new Runnable() {
             @Override
@@ -82,6 +87,9 @@ public class SocketUtil {
                     }else {
                         KLog.i(TAG,"连接失败");
                         if (tcpCallback != null) {
+//                            Message message = new Message();
+//                            message.what = 0;
+//                            handler.sendMessage(message);
                             tcpCallback.onFailure(new IOException("连接失败"));
                         }
                         tcpCallback.onComplete();
@@ -90,6 +98,9 @@ public class SocketUtil {
                     e.printStackTrace();
                     KLog.e(TAG,"连接异常");
                     if (tcpCallback != null) {
+//                        Message message = new Message();
+//                        message.what = 0;
+//                        handler.sendMessage(message);
                         tcpCallback.onFailure(e);
                     }
                     tcpCallback.onComplete();
@@ -119,6 +130,9 @@ public class SocketUtil {
                 if (outputStream != null) {
                     outputStream.close();
                 }
+                if(inputStream!=null){
+                    inputStream.close();
+                }
                 socket.close();
 //                if (socket.isClosed()) {
 //                    if (tcpCallback != null) {
@@ -134,7 +148,7 @@ public class SocketUtil {
      * 接收数据
      */
     public void receive() {
-        while (isConnected()) {
+        while (!socket.isClosed()) {
             try {
                 /**得到的是16进制数，需要进行解析*/
                 byte[] bt = new byte[1024];
@@ -155,7 +169,12 @@ public class SocketUtil {
                 tcpCallback.onComplete();
             } catch (IOException e) {
                 KLog.i(TAG,"接收失败");
+//                Message message = new Message();
+//                message.what = 0;
+//                handler.sendMessage(message);
+
                 tcpCallback.onFailure(e);
+
                 disconnect();
                 tcpCallback.onComplete();
             }
@@ -177,6 +196,9 @@ public class SocketUtil {
                         KLog.i(TAG,"发送成功");
                     } catch (IOException e) {
                         e.printStackTrace();
+//                        Message message = new Message();
+//                        message.what = 0;
+//                        handler.sendMessage(message);
                         tcpCallback.onFailure(e);
                         KLog.i(TAG,"发送失败");
                     }

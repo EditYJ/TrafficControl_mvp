@@ -1,6 +1,7 @@
 package com.edityj.trafficcontrol_mvp.presenter;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
 
 import com.edityj.trafficcontrol_mvp.adapter.MyListAdapter;
@@ -27,17 +28,17 @@ import java.util.List;
 
 public class ListPresenter extends BasePresenter<MainView> {
 
-    public List<ITEMDATA> getStartData(){
+    public List<ITEMDATA> getStartData() {
         return InitItemData.getStartInstance().getInitItemDatas();
     }
 
-    public List<ITEMDATA> getChangeData(){
+    public List<ITEMDATA> getChangeData() {
         return InitItemData.getInstance().getInitItemDatas();
     }
 
-    public void delSessionData(List<ITEMDATA> list){
+    public void delSessionData(List<ITEMDATA> list) {
 //        getChangeData().remove(pos);
-            AppInfo.Sp.setListToJosn(ConfigOfApp.APP_LIST_DATA, list);
+        AppInfo.Sp.setListToJosn(ConfigOfApp.APP_LIST_DATA, list);
     }
 
     public void saveStatus() {
@@ -54,11 +55,11 @@ public class ListPresenter extends BasePresenter<MainView> {
         ITEMDATA itemdata = new ITEMDATA();
         itemdata.setRemind(remindText);
         itemdata.setItemType(ITEMDATA.REMIND_TEXT);
-        myListAdapter.addData(position,itemdata);
+        myListAdapter.addData(position, itemdata);
         saveStatus();
     }
 
-    public void getData(final String params){
+    public void getData(final String params) {
         if (!isAttached()) {
             //如果没有View引用就不加载数据
             return;
@@ -75,13 +76,33 @@ public class ListPresenter extends BasePresenter<MainView> {
             }
 
             @Override
-            public void onSuccess(String receicedMessage) {
-                getView().showToast(receicedMessage);
+            public void onSuccess(final String receicedMessage) {
+                new Thread() {
+                    public void run() {
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                getView().showToast(receicedMessage);
+                            }
+                        });//在子线程中直接去new 一个handler
+                        //这种情况下，Runnable对象是运行在主线程中的，不可以进行联网操作，但是可以更新UI
+                    }
+                }.start();
             }
 
             @Override
             public void onFailure(IOException e) {
-                getView().showError();
+                new Thread() {
+                    public void run() {
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                getView().showError();
+                            }
+                        });//在子线程中直接去new 一个handler
+                        //这种情况下，Runnable对象是运行在主线程中的，不可以进行联网操作，但是可以更新UI
+                    }
+                }.start();
             }
         });
         SocketUtil.sharedCenter().connect();
@@ -95,6 +116,6 @@ public class ListPresenter extends BasePresenter<MainView> {
                     e.printStackTrace();
                 }
             }
-        }, 1000);
+        }, 100);
     }
 }

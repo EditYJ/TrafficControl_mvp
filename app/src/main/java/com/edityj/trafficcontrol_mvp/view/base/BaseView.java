@@ -4,10 +4,14 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 
 import com.edityj.trafficcontrol_mvp.presenter.base.BasePresenter;
 import com.edityj.trafficcontrol_mvp.utils.ToastUtil;
 import com.edityj.trafficcontrol_mvp.widget.loading.LoadingDialog;
+
+import java.io.IOException;
 
 /**
  * @author EditYJ
