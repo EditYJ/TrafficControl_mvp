@@ -22,6 +22,7 @@ import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.edityj.trafficcontrol_mvp.R;
 import com.edityj.trafficcontrol_mvp.adapter.MyListAdapter;
 import com.edityj.trafficcontrol_mvp.model.bean.ITEMDATA;
+import com.edityj.trafficcontrol_mvp.model.bean.ViewTag;
 import com.edityj.trafficcontrol_mvp.presenter.ListPresenter;
 import com.edityj.trafficcontrol_mvp.presenter.base.BasePresenter;
 import com.edityj.trafficcontrol_mvp.utils.BornView;
@@ -99,20 +100,22 @@ public class MainView extends BaseView implements IMainView{
         // StatusBarUtil.setTransparent(this);
         TitleBar titleBar = findViewById(R.id.topbar);
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
+            //获取电量
             @Override
             public void onLeftClick(View v) {
                 ToastUtil.showToast("左项View被点击");
             }
-
+            //中间标题
             @Override
             public void onTitleClick(View v) {
                 ToastUtil.showToast("中间View被点击");
             }
-
+            //发送
             @Override
             public void onRightClick(View v) {
                 ToastUtil.showToast("右项View被点击");
                 listPresenter.getData("点击你好！");
+//                leftScreen.getChildAt(0).getTag()
             }
         });
     }
@@ -152,6 +155,11 @@ public class MainView extends BaseView implements IMainView{
                 String remind=listPresenter.getChangeData().get(position).getRemind();
                 String speed=listPresenter.getChangeData().get(position).getSpeed();
                 int icon = listPresenter.getChangeData().get(position).getIcon();
+                int picID = listPresenter.getChangeData().get(position).getIconID();
+                int leftScreenChildType=0;
+                if(leftScreen.getChildAt(0)!=null) {
+                    leftScreenChildType = ((ViewTag) leftScreen.getChildAt(0).getTag()).getType();
+                }
                 if(type==ITEMDATA.DANGER_TEXT){
                     leftScreen.removeAllViews();
                     rightScreen.removeAllViews();
@@ -165,7 +173,7 @@ public class MainView extends BaseView implements IMainView{
                     if(leftScreen.getChildAt(0)==null){
                         leftScreen.addView(textView,0);
                     }else {
-                        if(rightScreen.getChildAt(0)==null){
+                        if(rightScreen.getChildAt(0)==null && leftScreenChildType!=ITEMDATA.DANGER_TEXT){//////////////////<<<<<===============
                             rightScreen.addView(textView,0);
                         }else{
                             ToastUtil.showToast("请清除内容后再进行设置！");
@@ -178,7 +186,7 @@ public class MainView extends BaseView implements IMainView{
                     if(leftScreen.getChildAt(0)==null){
                         leftScreen.addView(textView,0);
                     }else {
-                        if(rightScreen.getChildAt(0)==null){
+                        if(rightScreen.getChildAt(0)==null && leftScreenChildType!=ITEMDATA.DANGER_TEXT){
                             rightScreen.addView(textView,0);
                         }else{
                             ToastUtil.showToast("请清除内容后再进行设置！");
@@ -186,12 +194,12 @@ public class MainView extends BaseView implements IMainView{
                     }
                     //图片
                 }else{
-                    imageView = bornView.getImageView();
+                    imageView = bornView.getImageView(picID);
                     imageView.setImageResource(icon);
                     if(leftScreen.getChildAt(0)==null){
                         leftScreen.addView(imageView,0);
                     }else {
-                        if(rightScreen.getChildAt(0)==null){
+                        if(rightScreen.getChildAt(0)==null && leftScreenChildType!=ITEMDATA.DANGER_TEXT){
                             rightScreen.addView(imageView,0);
                         }else{
                             ToastUtil.showToast("请清除内容后再进行设置！");
@@ -331,6 +339,7 @@ public class MainView extends BaseView implements IMainView{
                             }
                         })
                 .show();
+
     }
 
     //调整亮度
@@ -340,15 +349,6 @@ public class MainView extends BaseView implements IMainView{
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_light, null);
         mMaterialDialog.setView(dialogView);
         mMaterialDialog.setTitle("这是标题")
-//                .setTitleTextColor(R.color.colorPrimary)
-//                .setTitleTextSize((float) 22.5)
-//                .setMessage("支持所有布局文字大小颜色等设置。")
-//                .setMessageTextColor(R.color.colorPrimary)
-//                .setMessageTextSize((float) 16.5)
-//                .setPositiveButtonTextColor(R.color.colorAccent)
-//                .setNegativeButtonTextColor(R.color.colorPrimary)
-//                .setPositiveButtonTextSize(15)
-//                .setNegativeButtonTextSize(15)
                 .setPositiveButton("确定", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -372,6 +372,4 @@ public class MainView extends BaseView implements IMainView{
                         })
                 .show();
     }
-
-//
 }

@@ -27,41 +27,45 @@ public class BornView {
     public BornView(){
     }
 
-    public ImageView getImageView() {
+    public ImageView getImageView(int picID) {
+        ViewTag viewTag = new ViewTag(ITEMDATA.ICON_PIC,picID);
         imageView = new ImageView(MainApplication.getAppInstance());
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(DpOrPxUtils.dip2px(MainApplication.getAppInstance(),50),DpOrPxUtils.dip2px(MainApplication.getAppInstance(),50));
         imageView.setLayoutParams(layoutParams);
-        imageView.setTag(ITEMDATA.ICON_PIC);
+        imageView.setTag(viewTag);
         return imageView;
     }
 
     public TextView getDangerTextView() {
+        ViewTag viewTag = new ViewTag(ITEMDATA.DANGER_TEXT);
         DangerTextView = new TextView(MainApplication.getAppInstance());
         DangerTextView.setTextColor(Color.RED);
         DangerTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP,28);
         DangerTextView.setGravity(Gravity.CENTER);
         DangerTextView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        DangerTextView.setTag(ITEMDATA.DANGER_TEXT);
+        DangerTextView.setTag(viewTag);
         return DangerTextView;
     }
 
     public TextView getRemindTextView() {
+        ViewTag viewTag = new ViewTag(ITEMDATA.REMIND_TEXT);
         RemindTextView = new TextView(MainApplication.getAppInstance());
         RemindTextView.setTextColor(Color.BLACK);
         RemindTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP,28);
         RemindTextView.setGravity(Gravity.CENTER);
         RemindTextView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        RemindTextView.setTag(ITEMDATA.REMIND_TEXT);
+        RemindTextView.setTag(viewTag);
         return RemindTextView;
     }
 
     public TextView getSpeedTextView() {
+        ViewTag viewTag = new ViewTag(ITEMDATA.SPEED_TEXT);
         SpeedTextView = new TextView(MainApplication.getAppInstance());
         SpeedTextView.setTextColor(Color.BLACK);
         SpeedTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP,28);
         SpeedTextView.setGravity(Gravity.CENTER);
         SpeedTextView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        SpeedTextView.setTag(ITEMDATA.SPEED_TEXT);
+        SpeedTextView.setTag(viewTag);
         return SpeedTextView;
     }
 }
