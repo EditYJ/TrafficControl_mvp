@@ -9,15 +9,18 @@ package com.edityj.trafficcontrol_mvp.model.bean;
  */
 public class ViewTag {
     private int type;
+    private int position;
     private int picID;
 
-    public ViewTag(int type) {
+    public ViewTag(int type, int position) {
         this.type = type;
         this.picID = 0;
+        this.position = position;
     }
 
-    public ViewTag(int type, int picID) {
+    public ViewTag(int type, int position,int picID) {
         this.type = type;
+        this.position = position;
         this.picID = picID;
     }
 
@@ -27,5 +30,9 @@ public class ViewTag {
 
     public int getPicID() {
         return picID;
+    }
+
+    public int getPosition() {
+        return position;
     }
 }

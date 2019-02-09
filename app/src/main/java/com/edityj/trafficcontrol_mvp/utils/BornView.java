@@ -27,8 +27,8 @@ public class BornView {
     public BornView(){
     }
 
-    public ImageView getImageView(int picID) {
-        ViewTag viewTag = new ViewTag(ITEMDATA.ICON_PIC,picID);
+    public ImageView getImageView(int position,int picID) {
+        ViewTag viewTag = new ViewTag(ITEMDATA.ICON_PIC,position,picID);
         imageView = new ImageView(MainApplication.getAppInstance());
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(DpOrPxUtils.dip2px(MainApplication.getAppInstance(),50),DpOrPxUtils.dip2px(MainApplication.getAppInstance(),50));
         imageView.setLayoutParams(layoutParams);
@@ -36,8 +36,8 @@ public class BornView {
         return imageView;
     }
 
-    public TextView getDangerTextView() {
-        ViewTag viewTag = new ViewTag(ITEMDATA.DANGER_TEXT);
+    public TextView getDangerTextView(int position) {
+        ViewTag viewTag = new ViewTag(ITEMDATA.DANGER_TEXT,position);
         DangerTextView = new TextView(MainApplication.getAppInstance());
         DangerTextView.setTextColor(Color.RED);
         DangerTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP,28);
@@ -47,8 +47,8 @@ public class BornView {
         return DangerTextView;
     }
 
-    public TextView getRemindTextView() {
-        ViewTag viewTag = new ViewTag(ITEMDATA.REMIND_TEXT);
+    public TextView getRemindTextView(int position) {
+        ViewTag viewTag = new ViewTag(ITEMDATA.REMIND_TEXT,position);
         RemindTextView = new TextView(MainApplication.getAppInstance());
         RemindTextView.setTextColor(Color.BLACK);
         RemindTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP,28);
@@ -58,8 +58,8 @@ public class BornView {
         return RemindTextView;
     }
 
-    public TextView getSpeedTextView() {
-        ViewTag viewTag = new ViewTag(ITEMDATA.SPEED_TEXT);
+    public TextView getSpeedTextView(int position) {
+        ViewTag viewTag = new ViewTag(ITEMDATA.SPEED_TEXT,position);
         SpeedTextView = new TextView(MainApplication.getAppInstance());
         SpeedTextView.setTextColor(Color.BLACK);
         SpeedTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP,28);

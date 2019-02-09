@@ -21,6 +21,7 @@ import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.edityj.trafficcontrol_mvp.R;
 import com.edityj.trafficcontrol_mvp.adapter.MyListAdapter;
+import com.edityj.trafficcontrol_mvp.config.ConfigOfApp;
 import com.edityj.trafficcontrol_mvp.model.bean.ITEMDATA;
 import com.edityj.trafficcontrol_mvp.model.bean.ViewTag;
 import com.edityj.trafficcontrol_mvp.presenter.ListPresenter;
@@ -42,7 +43,7 @@ import java.util.List;
  * Create at 2019/2/2
  * description: 主视图
  */
-public class MainView extends BaseView implements IMainView{
+public class MainView extends BaseView implements IMainView {
     private ListPresenter listPresenter;
 
     private MyListAdapter myListAdapter;
@@ -53,7 +54,7 @@ public class MainView extends BaseView implements IMainView{
 
     private BornView bornView;
 
-    private boolean isHide=true;
+    private boolean isHide = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +68,12 @@ public class MainView extends BaseView implements IMainView{
         recyclerView.setAdapter(myListAdapter);
 
 
-
     }
 
     /**
      * 初始化屏幕布局
      */
-    public void initScreen(){
+    public void initScreen() {
         leftScreen = findViewById(R.id.left_screen);
         rightScreen = findViewById(R.id.right_screen);
         leftScreen.setOnClickListener(new View.OnClickListener() {
@@ -93,10 +93,10 @@ public class MainView extends BaseView implements IMainView{
     /**
      * 初始化上方菜单栏
      */
-    public void initTitleBar(){
+    public void initTitleBar() {
         //设置状态栏颜色
         //参考资料：https://blog.csdn.net/lixuce1234/article/details/73991906
-        StatusBarUtil.setColor(this,0xbf0b0e);
+        StatusBarUtil.setColor(this, 0xbf0b0e);
         // StatusBarUtil.setTransparent(this);
         TitleBar titleBar = findViewById(R.id.topbar);
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
@@ -105,17 +105,74 @@ public class MainView extends BaseView implements IMainView{
             public void onLeftClick(View v) {
                 ToastUtil.showToast("左项View被点击");
             }
+
             //中间标题
             @Override
             public void onTitleClick(View v) {
                 ToastUtil.showToast("中间View被点击");
             }
+
             //发送
             @Override
             public void onRightClick(View v) {
                 ToastUtil.showToast("右项View被点击");
-                listPresenter.getData("点击你好！");
-//                leftScreen.getChildAt(0).getTag()
+//                listPresenter.getData("点击你好！");
+                String sendMsg = ConfigOfApp.SEND_SCREEN_HEAD;
+                View lview = leftScreen.getChildAt(0);
+                View rview = rightScreen.getChildAt(0);
+                //左屏不为空
+                if (lview != null) {
+                    ViewTag lviewTag = (ViewTag) lview.getTag();
+                    //左屏为警告词段
+                    if (lviewTag.getType() == ITEMDATA.DANGER_TEXT) {
+                        String danger = listPresenter.getChangeData().get(lviewTag.getPosition()).getDanger();
+                        sendMsg += ConfigOfApp.SEND_WARNING_MSG_HEAD + danger + ConfigOfApp.SEND_WARNING_MSG_END;
+                        //左屏为图片
+                    } else if (lviewTag.getType() == ITEMDATA.ICON_PIC) {
+                        int picID = lviewTag.getPicID();
+                        sendMsg += picID;
+                    } else {
+                        String remind = listPresenter.getChangeData().get(lviewTag.getPosition()).getRemind();
+                        if (remind==null||remind.length()==0) {
+                            remind = listPresenter.getChangeData().get(lviewTag.getPosition()).getSpeed();
+                        }
+                        sendMsg += remind;
+                    }
+                    //右屏不为空
+                    if(rview != null){
+                        ViewTag rviewTag = (ViewTag) rview.getTag();
+                        if (rviewTag.getType() == ITEMDATA.ICON_PIC) {
+                            int picID = rviewTag.getPicID();
+                            sendMsg += ConfigOfApp.SEND_SCREEN_POINT+picID;
+                        } else {
+                            String remind = listPresenter.getChangeData().get(rviewTag.getPosition()).getRemind();
+                            KLog.e(remind);
+                            //判断字符串为空的最好方法
+                            //参考资料：https://www.cnblogs.com/qiuting/p/5373571.html
+                            if (remind==null||remind.length()==0) {
+                                remind = listPresenter.getChangeData().get(rviewTag.getPosition()).getSpeed();
+                            }
+                            sendMsg += ConfigOfApp.SEND_SCREEN_POINT+remind;
+                        }
+                    }
+                    listPresenter.getData(sendMsg);
+                    //左屏为空
+                } else if(rview != null){
+                    ViewTag rviewTag = (ViewTag) rview.getTag();
+                    if (rviewTag.getType() == ITEMDATA.ICON_PIC) {
+                        int picID = rviewTag.getPicID();
+                        sendMsg += picID;
+                    } else {
+                        String remind = listPresenter.getChangeData().get(rviewTag.getPosition()).getRemind();
+                        if (remind==null||remind.length()==0) {
+                            remind = listPresenter.getChangeData().get(rviewTag.getPosition()).getSpeed();
+                        }
+                        sendMsg +=remind;
+                    }
+                    listPresenter.getData(sendMsg);
+                }else{
+                    ToastUtil.showToast("屏幕内容为空，请输入内容后在发送");
+                }
             }
         });
     }
@@ -124,7 +181,7 @@ public class MainView extends BaseView implements IMainView{
     /**
      * 初始化列表基本配置
      */
-    public void initBaseListConfig(){
+    public void initBaseListConfig() {
         //初始化recyclerView
         recyclerView = findViewById(R.id.list_layout);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainView.this);
@@ -143,65 +200,65 @@ public class MainView extends BaseView implements IMainView{
     /**
      * 添加列表相关点击事件
      */
-    public void addListClickListener(){
+    public void addListClickListener() {
         //点击事件
         myListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 TextView textView;
                 ImageView imageView;
-                int type=listPresenter.getChangeData().get(position).getItemType();
-                String danger=listPresenter.getChangeData().get(position).getDanger();
-                String remind=listPresenter.getChangeData().get(position).getRemind();
-                String speed=listPresenter.getChangeData().get(position).getSpeed();
+                int type = listPresenter.getChangeData().get(position).getItemType();
+                String danger = listPresenter.getChangeData().get(position).getDanger();
+                String remind = listPresenter.getChangeData().get(position).getRemind();
+                String speed = listPresenter.getChangeData().get(position).getSpeed();
                 int icon = listPresenter.getChangeData().get(position).getIcon();
                 int picID = listPresenter.getChangeData().get(position).getIconID();
-                int leftScreenChildType=0;
-                if(leftScreen.getChildAt(0)!=null) {
+                int leftScreenChildType = 0;
+                if (leftScreen.getChildAt(0) != null) {
                     leftScreenChildType = ((ViewTag) leftScreen.getChildAt(0).getTag()).getType();
                 }
-                if(type==ITEMDATA.DANGER_TEXT){
+                if (type == ITEMDATA.DANGER_TEXT) {
                     leftScreen.removeAllViews();
                     rightScreen.removeAllViews();
-                    textView = bornView.getDangerTextView();
+                    textView = bornView.getDangerTextView(position);
                     textView.setText(danger);
-                    leftScreen.addView(textView,0);
+                    leftScreen.addView(textView, 0);
                     //提示
-                }else if(type==ITEMDATA.REMIND_TEXT){
-                    textView = bornView.getRemindTextView();
+                } else if (type == ITEMDATA.REMIND_TEXT) {
+                    textView = bornView.getRemindTextView(position);
                     textView.setText(remind);
-                    if(leftScreen.getChildAt(0)==null){
-                        leftScreen.addView(textView,0);
-                    }else {
-                        if(rightScreen.getChildAt(0)==null && leftScreenChildType!=ITEMDATA.DANGER_TEXT){//////////////////<<<<<===============
-                            rightScreen.addView(textView,0);
-                        }else{
+                    if (leftScreen.getChildAt(0) == null) {
+                        leftScreen.addView(textView, 0);
+                    } else {
+                        if (rightScreen.getChildAt(0) == null && leftScreenChildType != ITEMDATA.DANGER_TEXT) {//////////////////<<<<<===============
+                            rightScreen.addView(textView, 0);
+                        } else {
                             ToastUtil.showToast("请清除内容后再进行设置！");
                         }
                     }
                     //速度
-                }else if(type==ITEMDATA.SPEED_TEXT){
-                    textView = bornView.getSpeedTextView();
+                } else if (type == ITEMDATA.SPEED_TEXT) {
+                    textView = bornView.getSpeedTextView(position);
                     textView.setText(speed);
-                    if(leftScreen.getChildAt(0)==null){
-                        leftScreen.addView(textView,0);
-                    }else {
-                        if(rightScreen.getChildAt(0)==null && leftScreenChildType!=ITEMDATA.DANGER_TEXT){
-                            rightScreen.addView(textView,0);
-                        }else{
+                    if (leftScreen.getChildAt(0) == null) {
+                        leftScreen.addView(textView, 0);
+                    } else {
+                        if (rightScreen.getChildAt(0) == null && leftScreenChildType != ITEMDATA.DANGER_TEXT) {
+                            rightScreen.addView(textView, 0);
+                        } else {
                             ToastUtil.showToast("请清除内容后再进行设置！");
                         }
                     }
                     //图片
-                }else{
-                    imageView = bornView.getImageView(picID);
+                } else {
+                    imageView = bornView.getImageView(position, picID);
                     imageView.setImageResource(icon);
-                    if(leftScreen.getChildAt(0)==null){
-                        leftScreen.addView(imageView,0);
-                    }else {
-                        if(rightScreen.getChildAt(0)==null && leftScreenChildType!=ITEMDATA.DANGER_TEXT){
-                            rightScreen.addView(imageView,0);
-                        }else{
+                    if (leftScreen.getChildAt(0) == null) {
+                        leftScreen.addView(imageView, 0);
+                    } else {
+                        if (rightScreen.getChildAt(0) == null && leftScreenChildType != ITEMDATA.DANGER_TEXT) {
+                            rightScreen.addView(imageView, 0);
+                        } else {
                             ToastUtil.showToast("请清除内容后再进行设置！");
                         }
                     }
@@ -223,11 +280,16 @@ public class MainView extends BaseView implements IMainView{
         itemTouchHelper.attachToRecyclerView(recyclerView);
         OnItemDragListener onItemDragListener = new OnItemDragListener() {
             @Override
-            public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos){}
+            public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
+            }
+
             @Override
-            public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {}
+            public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
+            }
+
             @Override
-            public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {}
+            public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
+            }
         };
         myListAdapter.enableDragItem(itemTouchHelper, R.id.img_move_icon, true);
         myListAdapter.setOnItemDragListener(onItemDragListener);
@@ -266,26 +328,26 @@ public class MainView extends BaseView implements IMainView{
     //开启和关闭编辑功能
     public void editer(View view) {
 //        ToastUtil.showToast("编辑");
-        List<ITEMDATA> list=listPresenter.getChangeData();
-        if(isHide){
-            for(int k=0;k<list.size();k++){
+        List<ITEMDATA> list = listPresenter.getChangeData();
+        if (isHide) {
+            for (int k = 0; k < list.size(); k++) {
                 list.get(k).setMoveIcon(R.drawable.move_icon);
-                if(list.get(k).getRemind()!=null){
+                if (list.get(k).getRemind() != null) {
                     list.get(k).setDeleteIcon(R.drawable.delete_icon);
                 }
             }
-            ((TextView)view).setText("完成");
-            isHide=false;
-        }else{
-            for(int k=0;k<list.size();k++){
+            ((TextView) view).setText("完成");
+            isHide = false;
+        } else {
+            for (int k = 0; k < list.size(); k++) {
                 list.get(k).setMoveIcon(0);
-                if(list.get(k).getRemind()!=null){
+                if (list.get(k).getRemind() != null) {
                     list.get(k).setDeleteIcon(0);
                 }
             }
             listPresenter.saveStatus();
-            ((TextView)view).setText("编辑");
-            isHide=true;
+            ((TextView) view).setText("编辑");
+            isHide = true;
         }
         myListAdapter.notifyDataSetChanged();
     }
